@@ -60,7 +60,7 @@ module ApplicationHelper
     when 3
       wday = '周三'
     when 4
-      wday = '周日'
+      wday = '周四'
     when 5
       wday = '周五'
     when 6
@@ -141,6 +141,30 @@ module ApplicationHelper
   else
     '其他类型'
   end
+ end
+
+
+ # 生成七牛私库 url
+ def quniuurl_pri(file_url)
+   Qiniu::Auth.authorize_download_url(file_url)
+ end
+
+
+ # 生成七牛私库 url
+ def user_check_uploadfile(file)
+   if file.present?
+     content_tag(:td,'√',class: 'alert-success text-center' )
+   else
+     content_tag(:td,'X',class: 'alert-danger text-center' )
+   end
+ end
+
+
+
+ # 某用户在指定时间内是否有提交周报
+ def user_feed_submit?(user,start_date,end_date)
+   collect_feeds = user.feeds.where(end_time: start_date..end_date)
+   return collect_feeds.present?
  end
 
 

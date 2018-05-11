@@ -6,11 +6,11 @@
 <!-- 用户搜索 -->
 <%= search_form_for [:admin,@q], html: {class: "navbar-form navbar-left"} do |f|  %>
   <div class="form-group">
-    <%= f.search_field :code_or_name_or_email_cont, class: "form-control", placeholder: "输入昵称,姓名或邮箱"  %>
+    <%= f.search_field :itcode_or_name_or_email_cont, class: "form-control", placeholder: "输入昵称,姓名或邮箱"  %>
     <%= f.submit '搜索',class: "btn btn-warning btn-xs" %>
     <%= link_to('+ 新建用户',new_admin_user_path,class: 'btn btn-primary btn-xs') %>
   </div>
-<% end -%>
+<% end %>
 
 
 
@@ -45,7 +45,7 @@
           <%= link_to('取消管理员',cancel_admin_admin_user_path(u),method: 'post') %>
         <% else %>
           <%= link_to('设为管理员',set_admin_admin_user_path(u),method: 'post') %>
-        <% end %> | <%= link_to('编辑',edit_admin_user_path(u)) %>  | <%= link_to('删除',admin_user_path(u), method: 'DELETE', data: { confirm: "确认删除该用户?" }) %> </td>
+        <% end %> | <%= link_to('编辑',edit_admin_user_path(u)) %> | <%= link_to('重置密码',reset_password_admin_user_path(u),method: 'post', data: { confirm: "确认重置该用户密码?" } ) %>  | <%= link_to('删除',admin_user_path(u), method: 'DELETE', data: { confirm: "确认删除该用户?" }) %> </td>
     </tr>
     <% end %>
   </tbody>

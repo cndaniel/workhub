@@ -9,7 +9,7 @@
       <!-- 最近几个参与的历史项目 -->
       <% if @last_projects.present? %>
         <% @last_projects.each do |p| %>
-          <option><%= p.sales.name %>#<%= p.code %>#<%= p.name %></option>
+          <option  value=<%= p.id %> ><%= p.sales.name %>#<%= p.code %>#<%= p.name %></option>
         <% end %>
       <% end %>
 
@@ -55,14 +55,14 @@
 
 
 
-<div class="form-group">
-  <label><abbr title="required">*</abbr> 开始日期</label>
-  <%= f.flatpickr_date_select :begin_time,placeholder: "点击选择日期",id: 'flatpickr_begin_time'%>
-</div>
-<div class="form-group">
-  <label><abbr title="required">*</abbr> 结束日期</label>
-  <%= f.flatpickr_date_select :end_time,placeholder: "点击选择日期",id: 'flatpickr_end_time'%>  
-</div>
+  <div class="form-group">
+    <label><abbr title="required">*</abbr> 开始日期</label>
+    <%= f.flatpickr_date_select :begin_time,placeholder: "点击选择日期",id: 'flatpickr_begin_time'%>
+  </div>
+  <div class="form-group">
+    <label><abbr title="required">*</abbr> 结束日期</label>
+    <%= f.flatpickr_date_select :end_time,placeholder: "点击选择日期",id: 'flatpickr_end_time'%>  
+  </div>
 
 
 

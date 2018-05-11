@@ -6,10 +6,10 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # 禁用用户注册
-  # devise :database_authenticatable, :registerable,
-  #        :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
 
-  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable
+  # devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable
 
   # 邮箱唯一验证
   validates :email, presence: true, uniqueness: true
@@ -27,6 +27,13 @@ class User < ApplicationRecord
 
   # 挂载头像
   mount_uploader :avatar_attachment, AvatarAttachmentUploader
+
+  # 挂载其他文件
+  mount_uploader :resume_attachment, AttachmentUploader
+  mount_uploader :idcard_attachment, AttachmentUploader
+  mount_uploader :degree_attachment, AttachmentUploader
+  mount_uploader :academic_attachment, AttachmentUploader  
+
 
   # 团队关系
   # 一个用户只隶属于同一个团队
@@ -68,10 +75,16 @@ class User < ApplicationRecord
   has_many :feeds
 
 
+  scope :order_by_itcode, -> { order("itcode ASC") }
+
+  # 该段时间提交周报了的用户
+  scope :order_by_team, -> { order("team_id ASC") }
+
+
   # 搜索用户
   def self.search(search)
     if search
-      where('name LIKE ? or code LIKE ?',"%#{search}%","%#{search}%")
+      where('name LIKE ? or itcode LIKE ?',"%#{search}%","%#{search}%")
     else
       scoped
     end
@@ -142,6 +155,28 @@ class User < ApplicationRecord
     Project.find_by(binding_team_id: self.team_id,projecttype: 'day_off')
   end
 
+
+  # 某段时间总工作量合计
+  def time_workloads(start_time,end_time)
+    current_feeds = self.feeds.where(end_time: start_time..end_time)
+    loads = 0
+    current_feeds.each do |f|
+      loads = loads + f.feedable.hours
+    end
+    return loads
+  end
+
+  # 计算饱和度
+  def time_workloads_precent(start_time,end_time)
+    current_feeds = self.feeds.where(end_time: start_time..end_time)
+    loads = 0
+    current_feeds.each do |f|
+      loads = loads + f.feedable.hours
+    end
+    return loads*2.5
+  end
+
+
 end
 
 # == Schema Information
@@ -178,6 +213,14 @@ end
 #  cost_center            :string
 #  level                  :string
 #  cost                   :integer
+#  resume_attachment      :string
+#  idcard_attachment      :string
+#  degree                 :string
+#  degree_attachment      :string
+#  academic_attachment    :string
+#  is_updateattachment    :boolean          default(FALSE)
+#  extra_cost             :integer
+#  is_feedneeded          :boolean          default(FALSE)
 #
 # Indexes
 #

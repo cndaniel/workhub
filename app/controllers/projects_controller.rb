@@ -26,6 +26,9 @@ class ProjectsController < ApplicationController
       @project_workflows_costsum = @project_workflows_costsum + w.cost
     end
 
+    # 导出的数据
+    @export_feeds = @feeds
+
     # 数据导出
     respond_to do |format|
       format.html
@@ -48,21 +51,22 @@ class ProjectsController < ApplicationController
 
   def create
     @project = Project.new(project_params)
+    # binding.pry
     # 搜索项目经理
-    if project_params[:pm_id].blank? or @project[:sales].blank?
+    if project_params[:pm_id].blank? or project_params[:sales_id].blank?
       flash[:alert] = "请选择项目经理与销售!"
       render :new        
     else
       pm_user = User.find(@project.pm_id)
-      sales_user = @project.sales
+      sales_user = User.find(@project.sales_id)
       @project.pm_id = nil
       # 记录创建者
       @project.builder = current_user
 
       # 如果不是临时项目,而且不是12位
-      if project_params[:projecttype]!='temp_project' and check_code?(project_params[:code]) == false
+      if project_params[:projecttype]!='sipresale_project' and check_code?(project_params[:code]) == false
         # binding.pry
-        flash[:alert] = "请填写12位项目号或修改项目号!"
+        flash[:alert] = "项目号格式有误,请填写正确的12位项目号(其中字母必须为大写)!"
         render :new        
       elsif @project.save
 
@@ -146,7 +150,8 @@ class ProjectsController < ApplicationController
     if code.present?
       if Project.find_by_code(code).present?
         return false
-      elsif code.length == 12
+      # 正则匹配字母或者数字
+      elsif code.length == 12 and code =~ /^[A-Z0-9]+$/
         return true
       else
         return false

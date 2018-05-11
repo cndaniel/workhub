@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180402104422) do
+ActiveRecord::Schema.define(version: 20180508125601) do
 
   create_table "feeds", force: :cascade do |t|
     t.integer "feedable_id"
@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 20180402104422) do
     t.string "area"
     t.datetime "begin_time"
     t.datetime "end_time"
+    t.boolean "is_disabled", default: false
     t.index ["name"], name: "index_projects_on_name", unique: true
   end
 
@@ -141,6 +142,7 @@ ActiveRecord::Schema.define(version: 20180402104422) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "team_type"
+    t.integer "parent_id"
     t.index ["name"], name: "index_teams_on_name", unique: true
   end
 
@@ -188,6 +190,14 @@ ActiveRecord::Schema.define(version: 20180402104422) do
     t.string "cost_center"
     t.string "level"
     t.integer "cost"
+    t.string "resume_attachment"
+    t.string "idcard_attachment"
+    t.string "degree"
+    t.string "degree_attachment"
+    t.string "academic_attachment"
+    t.boolean "is_updateattachment", default: false
+    t.integer "extra_cost"
+    t.boolean "is_feedneeded", default: false
     t.index ["code"], name: "index_users_on_code", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

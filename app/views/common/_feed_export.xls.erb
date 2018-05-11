@@ -22,7 +22,7 @@
         <Cell><Data ss:Type="String">结束时间</Data></Cell>
       </Row>
 
-      <% @feeds.each do |feed| %>
+      <% @export_feeds.each do |feed| %>
           <% itvendors_arrary =[] %>
           <% if feed.feedable.tag_itvendors.present? %>
             <% feed.feedable.tag_itvendors.each do |v| %>
@@ -45,8 +45,8 @@
           <Cell><Data ss:Type="String"><%= feed.user.name %></Data></Cell>
           <Cell><Data ss:Type="String"><%= desc_worktype(feed.feedable.worktype) %></Data></Cell>
           <Cell><Data ss:Type="String"><%= strip_tags(feed.feedable.content) %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= itvendors_arrary %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= itskills_arrary %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= itvendors_arrary.join(',') %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= itskills_arrary.join(',') %></Data></Cell>
           <Cell><Data ss:Type="Number"><%= feed.feedable.hours %></Data></Cell>
           <Cell><Data ss:Type="String"><%= strf(feed.feedable.begin_time) %></Data></Cell>
           <Cell><Data ss:Type="String"><%= strf(feed.feedable.end_time) %></Data></Cell>

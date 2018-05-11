@@ -32,6 +32,14 @@
 #  cost_center            :string
 #  level                  :string
 #  cost                   :integer
+#  resume_attachment      :string
+#  idcard_attachment      :string
+#  degree                 :string
+#  degree_attachment      :string
+#  academic_attachment    :string
+#  is_updateattachment    :boolean          default(FALSE)
+#  extra_cost             :integer
+#  is_feedneeded          :boolean          default(FALSE)
 #
 # Indexes
 #

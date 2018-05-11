@@ -3,7 +3,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <strong><%= @current_team.name %></strong> 
+        <strong>成员</strong> 
             <kbd><%= @current_team.users.count %></kbd>
       </div>
       <div class="panel-body">
@@ -11,12 +11,22 @@
         <div class="row">
           <% @all_team_users.each do |u| %>
             <div class="col-md-12">
+              <span>
+                <!-- 用户链接 -->
+                <%= link_to user_path(u) do %>
+                  <%= user_avatar(u,{style: "width: 20px;height: 20px;"}) %>
+                  <strong><%= u.name %></strong> 
+                <% end %>
 
-              <%= link_to user_path(u) do %>
-                <%= user_avatar(u,{style: "width: 20px;height: 20px;"}) %>
-                <strong><%= u.name %></strong> 
-              <% end %>
-                
+                <!-- 用户当周是否提交周报 -->
+                <% if user_feed_submit?(u,@start_date,@end_date) %>
+                  <kbd><span class="glyphicon glyphicon-ok" data-toggle="tooltip" data-placement="top" title="已提交周报"></span></kbd>
+                <% else %>
+                  <code><span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="top" title="未提交周报"></span></code>
+                <% end %>
+              
+              
+              </span>
             </div>
           <% end %>
         </div>
@@ -27,3 +37,12 @@
     
   </div>
 </div>
+
+
+<!-- 未提交周报提示 -->
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+</script>

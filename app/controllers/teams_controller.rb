@@ -2,8 +2,15 @@ class TeamsController < ApplicationController
   layout 'user'
 
   def week
-    # 当前团队
-    @current_team = current_user.team
+    if params[:team_id].present?
+      @current_team = Team.find(params[:team_id])
+    else
+      # 当前用户团队
+      @current_team = current_user.team
+    end
+
+    # 子部门
+    @children_teams = @current_team.children
 
     # 历史周
     @history_weeks = weekindex(Time.now, @current_team.created_at)
@@ -22,13 +29,24 @@ class TeamsController < ApplicationController
     # 设置当前时间
     @current_time = Time.now
     # 历史周
-    @history_weeks = weekindex(Time.now, current_user.created_at)
+    @history_weeks = weekindex(Time.now, @current_team.created_at)
 
     # 先检索出这段时间该团队所有的 feeds endtime
     team_feeds = Feed.includes(:user).where( users: { team_id: @current_team.id },feeds: { end_time: @start_date..@end_date })
 
+    # # 如果当前团队有子团队
+    # if @current_team.has_children?
+      
+    # else
+      
+    # end
+
+
     # 最后排序
     @feeds = team_feeds.order("feeds.created_at DESC")
+
+    # 导出的数据
+    @export_feeds = @feeds
 
     # 当周工作量计算
     loads = 0

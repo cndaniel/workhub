@@ -39,8 +39,18 @@ Rails.application.routes.draw do
         post :cancel_admin
       end
     end
-    resources :teams
-    resources :projects
+    resources :teams do
+      member do
+        post :delete_parents
+        post :delete_children
+      end
+    end
+    resources :projects do
+      member do
+        post :set_disabled
+        post :set_enabled
+      end
+    end
 
   end
   
@@ -50,6 +60,7 @@ Rails.application.routes.draw do
   resources :landingpage do
     collection do
       get :demo
+      get :faq
     end
   end
 
@@ -65,6 +76,24 @@ Rails.application.routes.draw do
       get "/teams/:search"  => "teams#search", as: :teams
       # 团队搜索
       get "/projects/:search"  => "projects#search", as: :projects
+    end
+  end
+
+  namespace :wechatpage do
+    resources :users do
+      collection do
+        get :user_search 
+
+        # 学历选择
+        get :user_degree_choice
+
+        get :user_has_idcard
+        get :user_has_resume
+        get :user_degree_college 
+        get :user_degree_university 
+        get :user_degree_master 
+        get :user_degree_doctor 
+      end
     end
   end
 

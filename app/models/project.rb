@@ -57,12 +57,40 @@ class Project < ApplicationRecord
   # 搜索常规项目
   def self.search(search)
     if search
-      where("projecttype <> 'technical_exchange' and projecttype <> 'certification_exam' and projecttype <> 'tech_improvement' and projecttype <> 'team_work' and projecttype <> 'day_off'").where('name LIKE ? or code LIKE ?',"%#{search}%","%#{search}%")
+      # users = User.where('name LIKE ?','%#{search}%')
+      # binding.pry
+      joins(:sales).where("projecttype <> 'technical_exchange' and projecttype <> 'certification_exam' and projecttype <> 'tech_improvement' and projecttype <> 'team_work' and projecttype <> 'day_off'").where('projects.name LIKE ? or projects.code LIKE ? or users.name LIKE ?',"%#{search}%","%#{search}%","%#{search}%")
       # where('name LIKE ? or code LIKE ? and projecttype <> "technical_exchange" and projecttype <> ? and projecttype <> ? and projecttype <> ? and projecttype <> ?',"%#{search}%","%#{search}%",'technical_exchange','certification_exam','tech_improvement','team_work','day_off')
       # where('name LIKE ? or code LIKE ? and projecttype <> "technical_exchange" and projecttype <> "certification_exam" and projecttype <> "tech_improvement" and projecttype <> "team_work" and projecttype <> "day_off"',"%#{search}%","%#{search}%")
       # where('name LIKE ? or code LIKE ?',"%#{search}%","%#{search}%")
     else
       scoped
+    end
+  end
+
+
+  def disabled!
+    self.is_disabled = true
+    self.save
+  end
+
+  def enabled!
+    self.is_disabled = false
+    self.save
+  end
+
+  def enabled?
+    !self.is_disabled
+  end
+
+
+  # 是否可编辑
+  def editor_user?(user)
+    # 如果用户是创建者,pm, 或后台管理员
+    if user.id == self.builder_id or user.is_admin? or self.managers.include?(user)
+      true
+    else
+      false
     end
   end
 
@@ -91,6 +119,7 @@ end
 #  area                   :string
 #  begin_time             :datetime
 #  end_time               :datetime
+#  is_disabled            :boolean          default(FALSE)
 #
 # Indexes
 #
